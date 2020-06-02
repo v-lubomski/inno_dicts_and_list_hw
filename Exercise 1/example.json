@@ -1,0 +1,23 @@
+{
+  "id": 25,
+  "name": "Roma",
+  "fsdf": 34545,
+  "package_params": {
+    "width": 1,
+    "height": 2
+  },
+  "location_and_quantity": [
+    {
+      "location": "Магазин на Ленина",
+      "amount": 77
+    },
+    {
+      "location": "Магазин в центре",
+      "amount": 345345
+    },
+    {
+      "location": "Магазин в Далеке",
+      "amount": 43535
+    }
+  ]
+}
