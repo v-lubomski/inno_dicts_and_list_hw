@@ -1,7 +1,10 @@
+"""Скрипт принимае json-файл, проверяет его на валидность и в случае успешной проверки записывает данные в БД."""
+
 from json import load
 from jsonschema import validate
 from jsonschema import exceptions
 import sqlite3
+from typing import Any
 
 JSON_FILENAME = 'example.json'
 JSON_SCHEMA_FILENAME = 'json.schema'
@@ -25,23 +28,22 @@ cursor.executescript(
     'FOREIGN KEY (id_good) REFERENCES goods (id));'
 )
 
-with open(JSON_FILENAME) as file:
+with open(JSON_FILENAME, encoding='utf-8') as file:
     json_data = load(file)
 
 with open(JSON_SCHEMA_FILENAME) as file:
     json_schema = load(file)
 
 
-def add_data_to_db(data, schema):
-
-    def validate_json():
+def add_data_to_db(data: dict, schema: dict) -> None:
+    """Функция валидации и добавления данных в БД."""
+    def validate_json() -> Any:
         try:
             validate(instance=data, schema=schema)
         except exceptions.ValidationError as err:
             return err
 
-    def add_data():
-
+    def add_data() -> None:
         # записываем данные в первую таблицу
         id_good = data['id']
         name_good = data['name']
@@ -56,7 +58,7 @@ def add_data_to_db(data, schema):
         shop_goods = data['location_and_quantity']
         for shop in shop_goods:
             check = cursor.execute(
-                f'SELECT id FROM shops_goods WHERE id_good=(?) AND location=(?)', (id_good, shop['location'])
+                'SELECT id FROM shops_goods WHERE id_good=(?) AND location=(?)', (id_good, shop['location'])
             ).fetchone()
             if check:
                 cursor.execute(
@@ -77,5 +79,3 @@ def add_data_to_db(data, schema):
 
 
 add_data_to_db(json_data, json_schema)
-
-
