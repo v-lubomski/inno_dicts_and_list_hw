@@ -71,11 +71,12 @@ def add_data_to_db(data: dict, schema: dict) -> None:
             conn.commit()
 
     # если валидация успешна - вызываем функцию записи в БД
-    is_true = validate_json()
-    if is_true is None:
+    is_error = validate_json()
+    if not is_error:
         add_data()
+        print('Данные успешно добавлены')
     else:
-        print(f'Данные не валидны, добавление в БД прервано\n\n {is_true}')
+        print(f'Данные не валидны, добавление в БД прервано\n\n {is_error}')
 
 
 add_data_to_db(json_data, json_schema)
